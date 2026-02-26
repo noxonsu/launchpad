@@ -11,7 +11,8 @@ jobs:
     steps:
       - name: Checkout launchpad
         uses: actions/checkout@v3
-        path: launchpad
+        with:
+          path: launchpad
 
       - name: Checkout appsource/launchpad
         uses: actions/checkout@v3
