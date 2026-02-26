@@ -1,0 +1,42 @@
+name: Build and Deploy Launchpad
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout launchpad
+        uses: actions/checkout@v3
+        path: launchpad
+
+      - name: Checkout appsource/launchpad
+        uses: actions/checkout@v3
+        with:
+          repository: appsource/launchpad
+          token: ${{ secrets.APPSOURCE_TOKEN }}
+          path: appsource-launchpad
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install and build
+        run: |
+          cd launchpad
+          yarn install
+          yarn build
+
+      - name: Deploy to appsource
+        run: |
+          rsync -av --delete launchpad/build/ appsource-launchpad/ --exclude='.git' --exclude='README.md'
+          cd appsource-launchpad
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add .
+          git commit -m "Auto-deploy from launchpad $(date '+%Y-%m-%d %H:%M:%S')" || echo "No changes"
+          git push
