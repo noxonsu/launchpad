@@ -1,43 +1,149 @@
-name: Build and Deploy Launchpad
+name: Deploy Launchpad
 
 on:
   push:
-    branches: [ main, master ]
+    branches:
+      - main
+      - master
   workflow_dispatch:
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+
     steps:
-      - name: Checkout launchpad
+      - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          path: launchpad
 
-      - name: Checkout appsource/launchpad
-        uses: actions/checkout@v3
-        with:
-          repository: appsource/launchpad
-          token: ${{ secrets.APPSOURCE_TOKEN }}
-          path: appsource-launchpad
-
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '16'
 
-      - name: Install and build
+      - name: Generate version
+        id: version
         run: |
-          cd launchpad
-          yarn install
-          yarn build
+          VERSION=$(date -u +%Y%m%d%H%M)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Generated version: $VERSION"
 
-      - name: Deploy to appsource
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build WordPress version (build_wp)
         run: |
-          rsync -av --delete launchpad/build/ appsource-launchpad/ --exclude='.git' --exclude='README.md'
-          cd appsource-launchpad
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
-          git add .
-          git commit -m "Auto-deploy from launchpad $(date '+%Y-%m-%d %H:%M:%S')" || echo "No changes"
-          git push
+          yarn build_wp
+          if [ ! -d "wordpress_vendor" ]; then
+            echo "Error: wordpress_vendor directory not found"
+            exit 1
+          fi
+          echo "✓ WordPress build completed"
+          ls -la wordpress_vendor/ | head -10
+
+      - name: Create info.json
+        run: |
+          cat > info.json << EOF
+          {
+            "version": "${{ env.VERSION }}",
+            "timestamp": $(date +%s),
+            "download_url": "https://farm.wpmix.net/updates/launchpad-v${{ env.VERSION }}.zip",
+            "changelog": "${{ github.event.head_commit.message }}",
+            "requires": "5.0",
+            "tested": "6.4",
+            "package": "https://farm.wpmix.net/updates/launchpad-v${{ env.VERSION }}.zip"
+          }
+          EOF
+          cat info.json
+
+      - name: Create WordPress plugin package
+        run: |
+          # Create temporary directory for packaging
+          mkdir -p launchpad-package
+
+          # Copy WordPress plugin files
+          if [ -d "wordpress" ]; then
+            cp -r wordpress/* launchpad-package/
+          fi
+
+          # Copy wordpress_vendor (WordPress-specific build)
+          mkdir -p launchpad-package/wordpress_vendor
+          cp -r wordpress_vendor/* launchpad-package/wordpress_vendor/
+
+          # Copy metadata
+          cp info.json launchpad-package/
+          if [ -f "readme.txt" ]; then
+            cp readme.txt launchpad-package/
+          fi
+
+          # Create ZIP
+          cd launchpad-package
+          zip -r ../launchpad-v${{ env.VERSION }}.zip .
+          cd ..
+
+          # Verify ZIP
+          if [ ! -f "launchpad-v${{ env.VERSION }}.zip" ]; then
+            echo "Error: ZIP file not created"
+            exit 1
+          fi
+
+          echo "Package created: launchpad-v${{ env.VERSION }}.zip"
+          ls -lh launchpad-v${{ env.VERSION }}.zip
+
+      - name: Upload to server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "launchpad-v${{ env.VERSION }}.zip,info.json"
+          target: "/home/farmFactory/incoming/"
+
+      - name: Update info.json on server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            mkdir -p /var/www/html/launchpad
+            cp /home/farmFactory/incoming/info.json /var/www/html/launchpad/info.json
+            chmod 644 /var/www/html/launchpad/info.json
+            echo "info.json updated"
+            cat /var/www/html/launchpad/info.json
+
+      - name: Health check
+        run: |
+          echo "Waiting 10 seconds for deployment to settle..."
+          sleep 10
+
+          # Check if info.json is accessible
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://farm.wpmix.net/launchpad/info.json || echo "000")
+
+          if [ "$HTTP_CODE" = "200" ]; then
+            echo "✓ Health check passed (HTTP $HTTP_CODE)"
+          else
+            echo "⚠ Warning: Health check returned HTTP $HTTP_CODE (non-blocking)"
+          fi
+
+      - name: Notify completion
+        if: success()
+        run: |
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "✓ Launchpad deployment complete"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "Version: ${{ env.VERSION }}"
+          echo "Package: launchpad-v${{ env.VERSION }}.zip"
+          echo "Download: https://farm.wpmix.net/updates/launchpad-v${{ env.VERSION }}.zip"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+      - name: Notify failure
+        if: failure()
+        run: |
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "✗ Launchpad deployment failed"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "Version: ${{ env.VERSION }}"
+          echo "Check workflow logs for details"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
