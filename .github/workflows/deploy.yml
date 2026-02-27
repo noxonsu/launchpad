@@ -48,40 +48,72 @@ jobs:
         run: |
           cat > info.json << EOF
           {
+            "name": "LaunchPad",
             "version": "${{ env.VERSION }}",
-            "timestamp": $(date +%s),
-            "download_url": "https://farm.wpmix.net/updates/launchpad-v${{ env.VERSION }}.zip",
-            "changelog": "${{ github.event.head_commit.message }}",
-            "requires": "5.0",
             "tested": "6.4",
-            "package": "https://farm.wpmix.net/updates/launchpad-v${{ env.VERSION }}.zip"
+            "requires": "5.0",
+            "requires_php": "7.1",
+            "download_url": "https://farm.wpmix.net/updates/launchpad-v${{ env.VERSION }}.zip",
+            "last_updated": "$(date -u +"%Y-%m-%d %H:%M:%S")",
+            "sections": {
+              "description": "Crypto launchpad platform for WordPress - create IDO pools with token lockers on EVM chains",
+              "installation": "Upload the plugin files to /wp-content/plugins/launchpad/, then activate the plugin through the Plugins menu in WordPress",
+              "changelog": "<h4>${{ env.VERSION }}</h4><ul><li>$(echo '${{ github.event.head_commit.message }}' | head -1)</li></ul>"
+            }
           }
           EOF
-          cat info.json
+
+          echo "Generated info.json:"
+          cat info.json | jq . || cat info.json
+          echo "Validating JSON..."
+          cat info.json | jq . > /dev/null && echo "✓ Valid JSON" || (echo "✗ Invalid JSON" && exit 1)
 
       - name: Create WordPress plugin package
         run: |
-          # Create temporary directory for packaging
-          mkdir -p launchpad-package
+          echo "Creating WordPress plugin package..."
 
-          # Copy WordPress plugin files
-          if [ -d "wordpress" ]; then
-            cp -r wordpress/* launchpad-package/
+          # Create package directory with plugin subdirectory (WordPress standard)
+          mkdir -p launchpad-package/launchpad
+
+          # Copy main plugin file
+          echo "Copying main plugin file..."
+          cp lp-wp.php launchpad-package/launchpad/
+
+          # Copy App directory (controllers)
+          echo "Copying App directory..."
+          cp -r App launchpad-package/launchpad/
+
+          # Copy templates directory
+          echo "Copying templates directory..."
+          cp -r templates launchpad-package/launchpad/
+
+          # Copy wordpress assets if exist
+          if [ -d "wordpress/assets" ]; then
+            echo "Copying wordpress assets..."
+            mkdir -p launchpad-package/launchpad/assets
+            cp -r wordpress/assets/* launchpad-package/launchpad/assets/
           fi
 
           # Copy wordpress_vendor (WordPress-specific build)
-          mkdir -p launchpad-package/wordpress_vendor
-          cp -r wordpress_vendor/* launchpad-package/wordpress_vendor/
+          echo "Copying wordpress_vendor (React build)..."
+          mkdir -p launchpad-package/launchpad/wordpress_vendor
+          cp -r wordpress_vendor/* launchpad-package/launchpad/wordpress_vendor/
 
-          # Copy metadata
-          cp info.json launchpad-package/
-          if [ -f "readme.txt" ]; then
-            cp readme.txt launchpad-package/
+          # Copy additional files if they exist
+          if [ -f "README.md" ]; then
+            cp README.md launchpad-package/launchpad/
+          fi
+          if [ -f "LICENSE" ]; then
+            cp LICENSE launchpad-package/launchpad/
           fi
 
-          # Create ZIP
+          # Verify structure
+          echo "Package structure:"
+          ls -la launchpad-package/launchpad/ | head -20
+
+          # Create ZIP (from package directory, so launchpad/ is the root in ZIP)
           cd launchpad-package
-          zip -r ../launchpad-v${{ env.VERSION }}.zip .
+          zip -r ../launchpad-v${{ env.VERSION }}.zip launchpad
           cd ..
 
           # Verify ZIP
@@ -92,6 +124,8 @@ jobs:
 
           echo "Package created: launchpad-v${{ env.VERSION }}.zip"
           ls -lh launchpad-v${{ env.VERSION }}.zip
+          echo "ZIP contents:"
+          unzip -l launchpad-v${{ env.VERSION }}.zip | head -30
 
       - name: Upload to server
         uses: appleboy/scp-action@master
@@ -114,6 +148,26 @@ jobs:
             chmod 644 /var/www/html/launchpad/info.json
             echo "info.json updated"
             cat /var/www/html/launchpad/info.json
+
+      - name: Deploy WordPress plugin ZIP to updates directory
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            # Create updates directory if it doesn't exist
+            mkdir -p /home/farmFactory/web/farm.wpmix.net/public_html/updates
+
+            # Move ZIP file from incoming to updates
+            mv /home/farmFactory/incoming/launchpad-v${{ env.VERSION }}.zip \
+               /home/farmFactory/web/farm.wpmix.net/public_html/updates/
+
+            # Set permissions
+            chmod 644 /home/farmFactory/web/farm.wpmix.net/public_html/updates/launchpad-v${{ env.VERSION }}.zip
+
+            echo "WordPress plugin package deployed:"
+            ls -lh /home/farmFactory/web/farm.wpmix.net/public_html/updates/launchpad-v${{ env.VERSION }}.zip
 
       - name: Health check
         run: |
