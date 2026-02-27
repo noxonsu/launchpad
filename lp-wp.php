@@ -6,7 +6,7 @@ Author:  onout.tools
 Requires PHP: 7.1
 Text Domain: launchpad-wp
 Domain Path: /lang
-Version: 1.3.1
+Version: 2.26.0227
  */
 /* Define Plugin Constants */
 defined( 'ABSPATH' ) || exit;
