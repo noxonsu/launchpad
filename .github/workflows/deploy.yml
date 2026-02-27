@@ -33,6 +33,8 @@ jobs:
         run: yarn install
 
       - name: Build WordPress version (build_wp)
+        env:
+          CI: false
         run: |
           yarn build_wp
           if [ ! -d "wordpress_vendor" ]; then
