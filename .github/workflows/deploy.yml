@@ -29,6 +29,17 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Generated version: $VERSION"
 
+      - name: Update version in plugin files
+        run: |
+          # Update plugin header version
+          sed -i "s/^ \* Version: .*/ * Version: ${{ env.VERSION }}/" lp-wp.php
+
+          # Update version constant
+          sed -i "s/define( 'ONOUT_LPWP_VER', '.*'/define( 'ONOUT_LPWP_VER', '${{ env.VERSION }}'/" lp-wp.php
+
+          echo "Updated lp-wp.php:"
+          grep -E "Version:|ONOUT_LPWP_VER" lp-wp.php
+
       - name: Install dependencies
         run: yarn install
 
