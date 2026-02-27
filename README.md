@@ -1,5 +1,7 @@
 # IDOFactory
 
+[![Deploy Status](https://github.com/noxonsu/launchpad/actions/workflows/deploy.yml/badge.svg)](https://github.com/noxonsu/launchpad/actions/workflows/deploy.yml)
+
 White-label Decentralized IDO Launchpad Platform
 
 ## Installation
