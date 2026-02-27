@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 define( 'ONOUT_LPWP_TEMPLATE_DIR', __DIR__ . '/templates' );
 define( 'ONOUT_LPWP_BASE_DIR', __DIR__ );
 define( 'ONOUT_LPWP_BASE_FILE', __FILE__ );
-define( 'ONOUT_LPWP_VER', '1.3.1' );
+define( 'ONOUT_LPWP_VER', '2.26.0227' );
 define( 'ONOUT_LPWP_URL', plugin_dir_url( __FILE__ ) );
 /**
  * Plugin Init
