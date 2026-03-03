@@ -66,3 +66,21 @@ yarn build_wp
     ![CreatePoolStep4_2](./docs/images/CreatePoolStep4_2.png)
 1. Lock Token page
     ![LockToken](./docs/images/LockToken.png)
+
+---
+
+## Ecosystem
+
+This project is part of the [onout.org](https://onout.org) open-source DeFi toolkit:
+
+| Product | Description |
+|---------|-------------|
+| [Wallet](https://onout.org/wallet/) | Multi-currency crypto wallet + P2P swap |
+| [DEX](https://onout.org/dex/) | Create your own DEX like Uniswap / PancakeSwap |
+| [Farming](https://onout.org/farming/) | ERC20 staking & yield farming |
+| [CrossChain](https://onout.org/crosschain/) | Cross-chain bridge |
+| [DAO Widget](https://onout.org/dao/) | Create your own DAO (Snapshot fork) |
+| [NFTsy](https://onout.org/nft/) | NFT showcase plugin |
+| [PredictionMarket](https://onout.org/predictionmarket/) | Prediction market platform |
+| **[Launchpad](https://onout.org/launchpad/)** | ← this project — IDO Launchpad |
+| [Lottery](https://onout.org/lottery/) | Crypto lottery |
