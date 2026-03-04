@@ -78,7 +78,9 @@
     "yup": "^0.32.11"
   },
   "resolutions": {
-    "react-error-overlay": "6.0.9"
+    "react-error-overlay": "6.0.9",
+    "unstorage": "1.14.0",
+    "chokidar": "3.6.0"
   },
   "scripts": {
     "start": "react-app-rewired start",

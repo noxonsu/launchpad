@@ -1,4 +1,4 @@
-"use strict";(self.webpackChunkidofactory=self.webpackChunkidofactory||[]).push([[6561],{96561:(e,t,i)=>{i.r(t),i.d(t,{W3mTransactionsView:()=>n});var r=i(66386),o=i(52105);i(78330),i(62394);const l=r.iv`
+"use strict";(self.webpackChunkidofactory=self.webpackChunkidofactory||[]).push([[6561],{96561:(e,t,i)=>{i.r(t),i.d(t,{W3mTransactionsView:()=>n});var r=i(66386),o=i(96464);i(20255),i(89250);const l=r.iv`
   :host > wui-flex:first-child {
     height: 500px;
     overflow-y: auto;

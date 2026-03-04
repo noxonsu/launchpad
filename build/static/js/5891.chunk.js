@@ -1,4 +1,4 @@
-"use strict";(self.webpackChunkidofactory=self.webpackChunkidofactory||[]).push([[5891],{45891:(e,t,r)=>{r.r(t),r.d(t,{W3mBuyInProgressView:()=>W,W3mOnRampProvidersView:()=>P,W3mOnrampFiatSelectView:()=>m,W3mOnrampTokensView:()=>O,W3mOnrampWidget:()=>F,W3mWhatIsABuyView:()=>L});var i=r(66386),o=r(43756),n=r(54417),s=r(38478),a=r(32751),c=r(90746),u=r(93060),l=r(47443),d=r(52105);r(78330),r(65723),r(43549),r(72389);const p=d.iv`
+"use strict";(self.webpackChunkidofactory=self.webpackChunkidofactory||[]).push([[5891],{45891:(e,t,r)=>{r.r(t),r.d(t,{W3mBuyInProgressView:()=>W,W3mOnRampProvidersView:()=>P,W3mOnrampFiatSelectView:()=>m,W3mOnrampTokensView:()=>O,W3mOnrampWidget:()=>F,W3mWhatIsABuyView:()=>L});var i=r(66386),o=r(43756),n=r(54417),s=r(38478),a=r(32751),c=r(90746),u=r(93060),l=r(47443),d=r(96464);r(20255),r(11753),r(57104),r(93746);const p=d.iv`
   :host > wui-grid {
     max-height: 360px;
     overflow: auto;
@@ -38,7 +38,7 @@
         >
           <wui-text variant="md-medium" color="primary">${t.id}</wui-text>
         </wui-list-item>
-      `}))}selectCurrency(e){e&&(s.ph.setPaymentCurrency(e),l.I.close())}};m.styles=p,h([(0,o.SB)()],m.prototype,"selectedCurrency",void 0),h([(0,o.SB)()],m.prototype,"currencies",void 0),h([(0,o.SB)()],m.prototype,"currencyImages",void 0),h([(0,o.SB)()],m.prototype,"checked",void 0),m=h([(0,d.Mo)("w3m-onramp-fiat-select-view")],m);var y=r(83520),g=r(8632),w=r(82880),b=r(26367),v=r(95174),f=r(36839),x=r(66107);r(75692),r(58507),r(90285),r(24614);const $=d.iv`
+      `}))}selectCurrency(e){e&&(s.ph.setPaymentCurrency(e),l.I.close())}};m.styles=p,h([(0,o.SB)()],m.prototype,"selectedCurrency",void 0),h([(0,o.SB)()],m.prototype,"currencies",void 0),h([(0,o.SB)()],m.prototype,"currencyImages",void 0),h([(0,o.SB)()],m.prototype,"checked",void 0),m=h([(0,d.Mo)("w3m-onramp-fiat-select-view")],m);var y=r(83520),g=r(8632),w=r(82880),b=r(26367),v=r(95174),f=r(36839),x=r(66107);r(73706),r(51943),r(77395),r(23334);const $=d.iv`
   button {
     padding: ${e=>{let{spacing:t}=e;return t[3]}};
     border-radius: ${e=>{let{borderRadius:t}=e;return t[4]}};
@@ -172,7 +172,7 @@
             <wui-text variant="sm-regular" color="secondary">${t.symbol}</wui-text>
           </wui-flex>
         </wui-list-item>
-      `}))}selectToken(e){e&&(s.ph.setPurchaseCurrency(e),l.I.close())}};O.styles=I,B([(0,o.SB)()],O.prototype,"selectedCurrency",void 0),B([(0,o.SB)()],O.prototype,"tokens",void 0),B([(0,o.SB)()],O.prototype,"tokenImages",void 0),B([(0,o.SB)()],O.prototype,"checked",void 0),O=B([(0,d.Mo)("w3m-onramp-token-select-view")],O);var S=r(82994),A=r(86533),j=r(90891);r(74385),r(41436),r(61126),r(84328);const T=d.iv`
+      `}))}selectToken(e){e&&(s.ph.setPurchaseCurrency(e),l.I.close())}};O.styles=I,B([(0,o.SB)()],O.prototype,"selectedCurrency",void 0),B([(0,o.SB)()],O.prototype,"tokens",void 0),B([(0,o.SB)()],O.prototype,"tokenImages",void 0),B([(0,o.SB)()],O.prototype,"checked",void 0),O=B([(0,d.Mo)("w3m-onramp-token-select-view")],O);var S=r(82994),A=r(86533),j=r(90891);r(45004),r(71833),r(3737),r(91168);const T=d.iv`
   @keyframes shake {
     0% {
       transform: translateX(0);
@@ -320,7 +320,7 @@
           Buy
         </wui-button>
       </wui-flex>
-    `}};L=M([(0,d.Mo)("w3m-what-is-a-buy-view")],L);r(66762);const U=d.iv`
+    `}};L=M([(0,d.Mo)("w3m-what-is-a-buy-view")],L);r(33298);const U=d.iv`
   :host {
     width: 100%;
   }
@@ -419,5 +419,5 @@
           borderRadius="xs"
         >
           Connect wallet
-        </wui-button>`}getQuotes(){this.loading||l.I.open({view:"OnRampProviders"})}openModal(){l.I.open({view:"Connect"})}async onPaymentAmountChange(e){s.ph.setPaymentAmount(Number(e.detail)),await s.ph.getQuote()}async selectPresetAmount(e){s.ph.setPaymentAmount(e),await s.ph.getQuote()}};F.styles=E,q([(0,o.Cb)({type:Boolean})],F.prototype,"disabled",void 0),q([(0,o.SB)()],F.prototype,"caipAddress",void 0),q([(0,o.SB)()],F.prototype,"loading",void 0),q([(0,o.SB)()],F.prototype,"paymentCurrency",void 0),q([(0,o.SB)()],F.prototype,"paymentAmount",void 0),q([(0,o.SB)()],F.prototype,"purchaseAmount",void 0),q([(0,o.SB)()],F.prototype,"quoteLoading",void 0),F=q([(0,d.Mo)("w3m-onramp-widget")],F)},58507:(e,t,r)=>{r(72738)}}]);
+        </wui-button>`}getQuotes(){this.loading||l.I.open({view:"OnRampProviders"})}openModal(){l.I.open({view:"Connect"})}async onPaymentAmountChange(e){s.ph.setPaymentAmount(Number(e.detail)),await s.ph.getQuote()}async selectPresetAmount(e){s.ph.setPaymentAmount(e),await s.ph.getQuote()}};F.styles=E,q([(0,o.Cb)({type:Boolean})],F.prototype,"disabled",void 0),q([(0,o.SB)()],F.prototype,"caipAddress",void 0),q([(0,o.SB)()],F.prototype,"loading",void 0),q([(0,o.SB)()],F.prototype,"paymentCurrency",void 0),q([(0,o.SB)()],F.prototype,"paymentAmount",void 0),q([(0,o.SB)()],F.prototype,"purchaseAmount",void 0),q([(0,o.SB)()],F.prototype,"quoteLoading",void 0),F=q([(0,d.Mo)("w3m-onramp-widget")],F)},51943:(e,t,r)=>{r(37640)}}]);
 //# sourceMappingURL=5891.chunk.js.map
