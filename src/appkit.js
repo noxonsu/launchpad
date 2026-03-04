@@ -17,6 +17,10 @@ import { reconnect } from 'wagmi/actions'
 
 const projectId = 'a23677c4af3139b4eccb52981f76ad94'
 
+// Read theme from URL param — MCW sends ?theme=light or ?theme=dark to iframe
+const urlTheme = new URLSearchParams(window.location.search).get('theme')
+const themeMode = urlTheme === 'light' ? 'light' : 'dark'
+
 const appkitNetworks = [mainnet, bsc, polygon, arbitrum]
 
 export const wagmiAdapter = new WagmiAdapter({
@@ -36,7 +40,7 @@ export const modal = createAppKit({
     url: 'https://launchpad.onout.org',
     icons: ['https://launchpad.onout.org/favicon.ico'],
   },
-  themeMode: 'dark',
+  themeMode,
   features: {
     analytics: false,
     email: false,
