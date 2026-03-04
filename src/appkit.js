@@ -14,6 +14,7 @@ import { createAppKit } from '@reown/appkit/react'
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi'
 import { mainnet, bsc, polygon, arbitrum } from '@reown/appkit/networks'
 import { reconnect } from 'wagmi/actions'
+import { http, fallback } from 'wagmi'
 
 const projectId = 'a23677c4af3139b4eccb52981f76ad94'
 
@@ -26,6 +27,14 @@ const appkitNetworks = [mainnet, bsc, polygon, arbitrum]
 export const wagmiAdapter = new WagmiAdapter({
   networks: appkitNetworks,
   projectId,
+  transports: {
+    [bsc.id]: fallback([
+      http('https://bsc-rpc.publicnode.com'),
+      http('https://1rpc.io/bnb'),
+      http('https://bsc.drpc.org'),
+      http('https://bsc-dataseed1.binance.org/'),
+    ]),
+  },
 })
 
 export const wagmiConfig = wagmiAdapter.wagmiConfig
