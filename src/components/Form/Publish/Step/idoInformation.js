@@ -1,6 +1,6 @@
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { useWeb3React } from "@web3-react/core";
+import { useWeb3React } from '../../../../hooks/useWeb3ReactShim';
 
 import { MenuItem, TextField, Checkbox } from "@mui/material";
 import BigNumber from "bignumber.js";

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from "styled-components";
-import { useWeb3React } from '@web3-react/core';
+import { useWeb3React } from '../../../hooks/useWeb3ReactShim';
 import * as s from "../../../styles/global";
 import { FaWrench } from 'react-icons/fa';
 import { useApplicationContext } from '../../../context/applicationContext';

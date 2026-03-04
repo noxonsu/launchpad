@@ -1,7 +1,7 @@
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
-import { useWeb3React } from "@web3-react/core";
+import { useWeb3React } from '../../../hooks/useWeb3ReactShim';
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useStoreContext } from "../../../context/store";

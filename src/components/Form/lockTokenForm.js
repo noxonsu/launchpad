@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import * as s from "../../styles/global";
 import { utils } from "../../utils";
 import { useApplicationContext } from "../../context/applicationContext";
-import { useWeb3React } from "@web3-react/core";
+import { useWeb3React } from '../../hooks/useWeb3ReactShim';
 import { useTokenContract } from "../../hooks/useContract";
 import Loader from "../Loader";
 

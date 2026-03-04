@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
 import { STORAGE_NETWORK_ID, STORAGE_NETWORK_NAME } from '../../../../constants';
-import { useWeb3React } from '@web3-react/core';
+import { useWeb3React } from '../../../../hooks/useWeb3ReactShim';
 import { useApplicationContext } from '../../../../context/applicationContext';
 import { saveAppData } from '../../../../utils/storage';
 import { TextField, Typography, InputLabel, Select, MenuItem } from '@mui/material';
 import * as s from "../../../../styles/global";
 import styled from 'styled-components';
 import Loader from '../../../../components/Loader';
-import { InjectedConnector } from '@web3-react/injected-connector';
 import { SUPPORTED_NETWORKS, SUPPORTED_CHAIN_IDS } from '../../../../connectors';
 import { switchInjectedNetwork } from '../../../../utils/utils';
 
@@ -44,7 +43,7 @@ export default function Networks() {
   const [defaultNetwork, setDefaultNetwork ] = useState(defaultChain)
 
   const isStorageNetwork = chainId === STORAGE_NETWORK_ID;
-  const canChangeNetwork = (connector instanceof InjectedConnector);
+  const canChangeNetwork = Boolean(window.ethereum);
 
   useEffect(() => {
     const isDifferentSettings =

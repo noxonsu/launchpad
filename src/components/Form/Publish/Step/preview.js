@@ -1,6 +1,6 @@
 import BigNumber from "bignumber.js";
 import React, { useEffect, useState } from "react";
-import { useWeb3React } from "@web3-react/core";
+import { useWeb3React } from '../../../../hooks/useWeb3ReactShim';
 import { FaImage } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useStoreContext } from "../../../../context/store";

@@ -1,4 +1,4 @@
-import { useWeb3React } from "@web3-react/core";
+import { useWeb3React } from '../../hooks/useWeb3ReactShim';
 import React from "react";
 import * as s from "../../styles/global";
 import BuyTokenCard from "../Card/buyTokenCard";

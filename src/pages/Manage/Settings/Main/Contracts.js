@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useWeb3React } from '@web3-react/core';
-import { InjectedConnector } from '@web3-react/injected-connector';
+import { useWeb3React } from '../../../../hooks/useWeb3ReactShim';
 
 import { useApplicationContext } from '../../../../context/applicationContext';
 import { STORAGE_NETWORK_ID, STORAGE_NETWORK_NAME } from '../../../../constants';
@@ -246,7 +245,7 @@ export default function Contracts() {
     (chainIdToSetUp === chainId) &&
     (!hasDeployedContract || (hasDeployedContract && isRedeployAllowed))
   );
-  const canChangeNetwork = (connector instanceof InjectedConnector);
+  const canChangeNetwork = Boolean(window.ethereum);
 
   useEffect(() => {
     setCanDeploySwapContracts(

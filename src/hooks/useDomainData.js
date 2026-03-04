@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useWeb3React } from "@web3-react/core";
+import { useWeb3React } from './useWeb3ReactShim';
 import { getCurrentDomain } from '../utils/utils';
 import { useStorageContract } from './useContract';
 import { STORAGE_APP_KEY, ZERO_ADDRESS } from '../constants';

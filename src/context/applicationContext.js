@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
-import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
+import { useWeb3React } from "../hooks/useWeb3ReactShim";
 import { SUPPORTED_CHAIN_IDS } from "../connectors";
 import { useTokenContract, useLockerFactoryContract, useIDOFactoryContract } from "../hooks/useContract";
 import { networks } from "../constants/networksInfo";
@@ -83,10 +83,6 @@ export const ApplicationContextProvider = ({ children }) => {
   }, [domainSettings, usedChainId])
 
   useEffect(() => {
-    if (error && error instanceof UnsupportedChainIdError) {
-      return setIsAvailableNetwork(false);
-    }
-
     if (usedChainId) {
       // const lowerAcc = account?.toLowerCase()
       // const appAdmin = wordpressData?.wpAdmin

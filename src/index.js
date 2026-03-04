@@ -1,11 +1,11 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import { HashRouter as Router } from "react-router-dom";
-import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core';
-import { NetworkContextName } from './constants';
-import getLibrary from './utils/getLibrary.js';
+import { WagmiProvider } from "wagmi";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { wagmiConfig } from "./appkit";
 import App from "./App";
 import { PoolContextProvider } from "./context/poolContext";
 import { StoreContextProvider } from "./context/store";
@@ -14,7 +14,11 @@ import "./index.css";
 import store from "./redux/store";
 import reportWebVitals from "./reportWebVitals";
 
-const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName);
+// In bridge mode, wallet-bridge-init.js handles the wallet connection
+// via MCW postMessage bridge. AppKit/wagmi still provide the provider
+// context but window.ethereum is set by the bridge.
+
+const queryClient = new QueryClient()
 
 const theme = createTheme({
   palette: {
@@ -44,10 +48,12 @@ const theme = createTheme({
   },
 });
 
-ReactDOM.render(
+const container = document.getElementById("root");
+const root = createRoot(container);
+root.render(
   <React.StrictMode>
-    <Web3ReactProvider getLibrary={getLibrary}>
-      <Web3ProviderNetwork getLibrary={getLibrary}>
+    <WagmiProvider config={wagmiConfig}>
+      <QueryClientProvider client={queryClient}>
         <Provider store={store}>
           <ApplicationContextProvider>
             <StoreContextProvider>
@@ -61,10 +67,9 @@ ReactDOM.render(
             </StoreContextProvider>
           </ApplicationContextProvider>
         </Provider>
-      </Web3ProviderNetwork>
-    </Web3ReactProvider>
-  </React.StrictMode>,
-  document.getElementById("root")
+      </QueryClientProvider>
+    </WagmiProvider>
+  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

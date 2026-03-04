@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useWeb3React } from '@web3-react/core'
+import { useWeb3React } from '../../../hooks/useWeb3ReactShim'
 import { useApplicationContext } from '../../../context/applicationContext'
 import { SUPPORTED_NETWORKS, SUPPORTED_CHAIN_IDS } from '../../../connectors'
 import { networks } from '../../../constants/networksInfo'

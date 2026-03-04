@@ -2,10 +2,7 @@ import styled from 'styled-components'
 import Option from '../../components/WalletModal/Option'
 import { CURRENCY } from '../../assets/images'
 import { networks } from '../../constants/networksInfo'
-import {
-  useWeb3React
-} from '@web3-react/core'
-import { InjectedConnector } from '@web3-react/injected-connector'
+import { useWeb3React } from '../../hooks/useWeb3ReactShim'
 import { switchInjectedNetwork } from '../../utils/utils'
 
 const Title = styled.strong`
@@ -41,9 +38,7 @@ export default function SwitchNetwork(props) {
   const { connector } = useWeb3React()
 
   const trySwitch = async (chainId) => {
-    if (connector instanceof InjectedConnector) {
-      const result = await switchInjectedNetwork(chainId)
-    }
+    await switchInjectedNetwork(chainId)
   }
 
   const getNetworkOptions = () => {

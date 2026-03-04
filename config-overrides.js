@@ -14,6 +14,26 @@ module.exports = function override (config, env) {
     }
     config.resolve.extensions = [...config.resolve.extensions, ".ts", ".js"]
 
+    // Fix: @tanstack/react-query and wagmi ship as ESM ("type":"module") which
+    // webpack 5 treats as fully-specified — 'react/jsx-runtime' won't resolve
+    // without an extension. extensionAlias + fullySpecified:false fix this.
+    config.module.rules.push({
+        test: /\.m?js/,
+        resolve: {
+            fullySpecified: false,
+        },
+    })
+
+    // Fix: stub out optional peer deps of @wagmi/connectors that are not installed or have build issues
+    config.resolve.alias = {
+        ...config.resolve.alias,
+        'porto/internal': false,
+        'porto': false,
+        '@coinbase/wallet-sdk': false,
+        '@metamask/sdk': false,
+        '@base-org/account': false,
+    }
+
     config.plugins = [
         ...config.plugins,
         new webpack.ProvidePlugin({

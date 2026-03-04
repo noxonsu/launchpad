@@ -1,76 +1,43 @@
-import { useWeb3React as useWeb3ReactCore } from '@web3-react/core';
-import { useEffect, useState } from 'react';
-import { injected } from '../connectors';
-import { NetworkContextName } from '../constants';
-import { isMobile } from '../utils/utils';
+import { useEffect, useState } from 'react'
+import { useWeb3React } from './useWeb3ReactShim'
+
+export { useWeb3React }
 
 export function useActiveWeb3React() {
-  const context = useWeb3ReactCore();
-  const contextNetwork = useWeb3ReactCore(NetworkContextName);
-  return context.active ? context : contextNetwork;
-}
-
-export function useEagerConnect() {
-  const { activate, active } = useWeb3ReactCore(); // specifically using useWeb3ReactCore because of what this hook does
-  const [tried, setTried] = useState(false);
-
-  useEffect(() => {
-    injected.isAuthorized().then((isAuthorized) => {
-      if (isAuthorized) {
-        activate(injected, undefined, true).catch(() => {
-          setTried(true);
-        });
-      } else {
-        if (isMobile && window.ethereum) {
-          activate(injected, undefined, true).catch(() => {
-            setTried(true);
-          });
-        } else {
-          setTried(true);
-        }
-      }
-    });
-  }, [activate]); // intentionally only running on mount (make sure it's only mounted once :))
-
-  // if the connection worked, wait until we get confirmation of that to flip the flag
-  useEffect(() => {
-    if (active) {
-      setTried(true);
-    }
-  }, [active]);
-
-  return tried;
+  // With wagmi, there's only one context — return it directly
+  return useWeb3React()
 }
 
 /**
- * Use for network and injected - logs user in
- * and out after checking what network theyre on
+ * Eager connect is handled by wagmi's reconnect() called in appkit.js.
+ * This hook just returns true immediately so Web3ReactManager doesn't block rendering.
  */
-export function useInactiveListener(suppress = false) {
-  const { active, error, activate, deactivate } = useWeb3ReactCore() // specifically using useWeb3React because of what this hook does
+export function useEagerConnect() {
+  const [tried, setTried] = useState(false)
 
   useEffect(() => {
+    // wagmi + AppKit handle reconnect automatically via reconnect(wagmiConfig)
+    setTried(true)
+  }, [])
+
+  return tried
+}
+
+/**
+ * Inactive listener: watches for chainChanged / accountsChanged on window.ethereum
+ * (covers bridge mode and MetaMask injected).
+ * wagmi handles this internally for connected wallets; this is a fallback.
+ */
+export function useInactiveListener(suppress = false) {
+  useEffect(() => {
     const { ethereum } = window
-
-    if (ethereum && ethereum.on && !active && !error && !suppress) {
-      const handleChainChanged = chainId => {
-        const supported = injected.supportedChainIds?.includes(Number(chainId))
-
-        if (!supported) return deactivate()
-
-        // eat errors
-        activate(injected, undefined, true).catch((error) => {
-          console.error('Failed to activate after chain changed', error)
-        })
+    if (ethereum && ethereum.on && !suppress) {
+      const handleChainChanged = () => {
+        // wagmi reacts automatically; just log
+        console.debug('[useInactiveListener] chainChanged')
       }
-
-      const handleAccountsChanged = accounts => {
-        if (accounts.length > 0) {
-          // eat errors
-          activate(injected, undefined, true).catch((error) => {
-            console.error('Failed to activate after accounts changed', error)
-          })
-        }
+      const handleAccountsChanged = (accounts) => {
+        console.debug('[useInactiveListener] accountsChanged', accounts)
       }
 
       ethereum.on('chainChanged', handleChainChanged)
@@ -84,5 +51,5 @@ export function useInactiveListener(suppress = false) {
       }
     }
     return undefined
-  }, [active, error, suppress, activate, deactivate])
+  }, [suppress])
 }

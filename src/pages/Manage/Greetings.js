@@ -3,11 +3,9 @@ import styled from 'styled-components';
 import { FaRegHandPeace } from 'react-icons/fa';
 import * as s from "../../styles/global";
 import { useApplicationContext } from '../../context/applicationContext';
-import { useWeb3React } from '@web3-react/core';
+import { useWeb3React } from '../../hooks/useWeb3ReactShim';
 import { STORAGE_NETWORK_ID, STORAGE_NETWORK_NAME } from '../../constants';
-import { InjectedConnector } from '@web3-react/injected-connector';
 import { switchInjectedNetwork } from '../../utils/utils';
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
 import Loader from '../../components/Loader';
 import { saveAppData } from '../../utils/storage';
 
@@ -83,15 +81,8 @@ export default function Greetings() {
   }
 
   const switchToStorage = async () => {
-    if (!connector) return;
-
     try {
-      if (connector instanceof InjectedConnector) {
-        await switchInjectedNetwork(STORAGE_NETWORK_ID);
-      } // if the connector is walletconnect and the user has already tried to connect, manually reset the connector
-      else if (connector instanceof WalletConnectConnector && connector.walletConnectProvider?.wc?.uri) {
-        connector.walletConnectProvider = undefined;
-      }
+      await switchInjectedNetwork(STORAGE_NETWORK_ID);
     } catch (error) {
       console.error(error);
     }

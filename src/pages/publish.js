@@ -2,7 +2,7 @@ import React from "react";
 import PublishForm from "../components/Form/Publish/publishForm";
 import * as s from "../styles/global";
 import { useApplicationContext } from "../context/applicationContext"
-import { useWeb3React } from "@web3-react/core";
+import { useWeb3React } from '../hooks/useWeb3ReactShim';
 
 const Publish = () => {
   const { account } = useWeb3React()

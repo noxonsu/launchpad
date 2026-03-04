@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import * as s from "../../styles/global";
 import { Web3Status } from "../Web3Status";
 import Loader from "../Loader";
-import { useWeb3React } from "@web3-react/core";
+import { useWeb3React } from '../../hooks/useWeb3ReactShim';
 import { CURRENCY } from '../../assets/images';
 import { Paper } from "@mui/material";
 

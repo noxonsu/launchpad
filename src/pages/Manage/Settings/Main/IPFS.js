@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { STORAGE_NETWORK_ID, STORAGE_NETWORK_NAME } from '../../../../constants';
-import { useWeb3React } from '@web3-react/core';
+import { useWeb3React } from '../../../../hooks/useWeb3ReactShim';
 import { useApplicationContext } from '../../../../context/applicationContext';
 import { isWebUri } from '../../../../utils/url';
 import { saveAppData } from '../../../../utils/storage';
@@ -8,7 +8,6 @@ import { TextField, Typography } from '@mui/material';
 import * as s from "../../../../styles/global";
 import styled from 'styled-components';
 import Loader from '../../../../components/Loader';
-import { InjectedConnector } from '@web3-react/injected-connector';
 import { switchInjectedNetwork } from '../../../../utils/utils';
 
 const ContentWrapper = styled.div`
@@ -69,7 +68,7 @@ export default function IPFS() {
 
 
   const isStorageNetwork = chainId === STORAGE_NETWORK_ID;
-  const canChangeNetwork = (connector instanceof InjectedConnector);
+  const canChangeNetwork = Boolean(window.ethereum);
   const canAndShouldSwitchToStorageNetwork = canChangeNetwork && !isStorageNetwork;
 
   const [cannotSaveSettings, setCannotSaveSettings] = useState(true);

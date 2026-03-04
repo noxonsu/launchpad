@@ -1,5 +1,5 @@
 import { Checkbox } from "@mui/material";
-import { useWeb3React } from "@web3-react/core";
+import { useWeb3React } from '../hooks/useWeb3ReactShim';
 import React, { useState } from "react";
 import CreateLaunchpad from "../components/Button/createLaunchpad";
 import CreateLocker from "../components/Button/createLocker";

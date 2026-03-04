@@ -1,5 +1,5 @@
 import { TextField } from "@mui/material";
-import { useWeb3React } from "@web3-react/core";
+import { useWeb3React } from '../../../../hooks/useWeb3ReactShim';
 import BigNumber from "bignumber.js";
 import React, { useEffect, useState } from "react";
 import { Badge } from "react-bootstrap";
