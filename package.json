@@ -92,7 +92,8 @@
     "test": "react-app-rewired test",
     "eject": "react-app-rewired eject",
     "predeploy": "yarn build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "prepare": "git config core.hooksPath .husky 2>/dev/null || true"
   },
   "eslintConfig": {
     "extends": [
