@@ -91,7 +91,7 @@ jobs:
         with:
           personal_token: ${{ secrets.APPSOURCE_TOKEN }}
           external_repository: appsource/launchpad
-          publish_branch: gh-pages
+          publish_branch: main
           publish_dir: ./build
           cname: launchpad.onout.org
           force_orphan: true
