@@ -97,7 +97,11 @@ jobs:
           force_orphan: true
 
       - name: Create info.json
+        env:
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
         run: |
+          FIRST_LINE=$(echo "$COMMIT_MSG" | head -1 | sed 's/"/\\"/g' | sed "s/'/\\'/g")
+          LAST_UPDATED=$(date -u +"%Y-%m-%d %H:%M:%S")
           cat > info.json << EOF
           {
             "name": "LaunchPad",
@@ -106,11 +110,11 @@ jobs:
             "requires": "5.0",
             "requires_php": "7.1",
             "download_url": "https://farm.wpmix.net/updates/launchpad-v${{ env.VERSION }}.zip",
-            "last_updated": "$(date -u +"%Y-%m-%d %H:%M:%S")",
+            "last_updated": "${LAST_UPDATED}",
             "sections": {
               "description": "Crypto launchpad platform for WordPress - create IDO pools with token lockers on EVM chains",
               "installation": "Upload the plugin files to /wp-content/plugins/launchpad/, then activate the plugin through the Plugins menu in WordPress",
-              "changelog": "<h4>${{ env.VERSION }}</h4><ul><li>$(echo '${{ github.event.head_commit.message }}' | head -1)</li></ul>"
+              "changelog": "<h4>${{ env.VERSION }}</h4><ul><li>${FIRST_LINE}</li></ul>"
             }
           }
           EOF
