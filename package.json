@@ -115,6 +115,15 @@
       "last 1 safari version"
     ]
   },
+  "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!(wagmi|@wagmi|viem|@tanstack/react-query|@reown|abitype)/)"
+    ],
+    "moduleNameMapper": {
+      "\\.(css|less|scss|sass)$": "<rootDir>/src/__mocks__/styleMock.js",
+      "\\.(png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot)$": "<rootDir>/src/__mocks__/fileMock.js"
+    }
+  },
   "devDependencies": {
     "@ethersproject/address": "^5.8.0",
     "@ethersproject/providers": "^5.8.0",
