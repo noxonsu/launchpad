@@ -35,6 +35,9 @@ class MenuPageController extends Controller
   public function handleRequest()
   {
     if (isset($_POST['onout_lpwp_save_setting'])) {
+      if (!isset($_POST['launchpad_nonce']) || !wp_verify_nonce($_POST['launchpad_nonce'], 'launchpad_save_settings')) {
+        wp_die('Security check failed');
+      }
       if (isset( $_POST['onout_lpwp_as_homepage'] ) and ( $_POST['onout_lpwp_as_homepage'] == 'on' ) ) {
         update_option('onout_lpwp_as_homepage', 'true');
       } else {

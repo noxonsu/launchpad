@@ -71,6 +71,20 @@ const BuyTokenCard = (props) => {
   const approveBuyToken = async () => {
     setIsApproving(true)
     try {
+      const currentAllowance = await utils.getTokenAllowance({
+        tokenAddress: payToken.address,
+        web3: library.web3,
+        owner: account,
+        spender: idoAddress
+      })
+      if (new BigNumber(currentAllowance).gt(0)) {
+        try {
+          const resetTx = await payTokenContract.approve(idoAddress, `0x0`, { from: account })
+          await resetTx.wait()
+        } catch (resetErr) {
+          console.log('approve zero-reset skipped (token may not support it):', resetErr)
+        }
+      }
       const tx = await payTokenContract.approve(
         idoAddress,
         `0x${BigNumber(ethAmount).toString(16)}`,
@@ -123,7 +137,7 @@ const BuyTokenCard = (props) => {
         } else {
           return await IDOPoolContract.pay({
             from: account,
-            value: `0x${ethAmount.toString(16)}`,
+            value: `0x${BigNumber(ethAmount).toString(16)}`,
           })
         }
       }

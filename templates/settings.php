@@ -11,6 +11,7 @@
       <div class="">
         <form action="#" method="post" class="wp-onout-launchpad-form">
           <input type="hidden" name="onout_lpwp_save_setting" value="yes" />
+          <?php wp_nonce_field('launchpad_save_settings', 'launchpad_nonce'); ?>
           <table class="form-table">
             <tbody>
               <tr>

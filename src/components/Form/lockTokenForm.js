@@ -136,6 +136,15 @@ const LockTokenForm = () => {
     setLoading(true);
 
     try {
+      const currentAllowance = await tokenContract.allowance(account, TokenLockerFactoryAddress);
+      if (BigNumber(currentAllowance?.toString?.()).gt(0)) {
+        try {
+          const resetTx = await tokenContract.approve(TokenLockerFactoryAddress, 0, { from: account });
+          await resetTx.wait();
+        } catch (resetErr) {
+          console.log('approve zero-reset skipped (token may not support it):', resetErr);
+        }
+      }
       const tx = await tokenContract.approve(TokenLockerFactoryAddress, amount, {
         from: account,
       });

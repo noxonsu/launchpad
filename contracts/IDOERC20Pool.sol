@@ -126,6 +126,7 @@ contract IDOERC20Pool is Ownable, ReentrancyGuard {
         // @to-do - check allowance
 
         uint256 tokenAmount = getTokenAmount(amount, finInfo.tokenPrice);
+        require(tokenAmount > 0, "Amount too small");
 
         payToken.safeTransferFrom(msg.sender, address(this), amount);
 

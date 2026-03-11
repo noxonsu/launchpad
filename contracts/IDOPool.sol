@@ -125,6 +125,7 @@ contract IDOPool is Ownable, ReentrancyGuard {
         require(user.totalInvestedETH.add(msg.value) <= finInfo.maxEthPayment, "More then max amount");
 
         uint256 tokenAmount = getTokenAmount(msg.value, finInfo.tokenPrice);
+        require(tokenAmount > 0, "Amount too small");
 
         totalInvestedETH = totalInvestedETH.add(msg.value);
         tokensForDistribution = tokensForDistribution.add(tokenAmount);
